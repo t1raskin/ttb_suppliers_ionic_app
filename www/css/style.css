@@ -1,0 +1,68 @@
+.header .col {
+  background-color:lightgrey;
+}
+
+.col{
+  border-right: solid 1px #cccccc;
+}
+
+.col:last-child {
+  border-right: solid 1px #cccccc;
+}
+
+.row:last-child .col {
+  border-bottom: solid 1px #cccccc;
+}
+
+.lead_details_block{
+  margin-top: 5px!important;
+}
+
+.lead_block{
+  margin-bottom: 5px;
+  border: solid 1px black;
+}
+
+.lead_block_active {
+  background: #def3e1;
+}
+
+.photo_container{
+  display: block;
+  overflow: hidden;
+  margin: 5px;
+}
+
+.img_full_width{
+  width: 100%;
+}
+
+.list{
+  direction: rtl;
+}
+
+.item-checkbox{
+  text-align: left;
+}
+
+.item-select select{
+  right: auto;
+  left: 16px;
+}
+
+.item-select:after{
+  right: auto;
+  left: 16px;
+}
+
+.platform-android .checkbox-platform input:after, .platform-android .checkbox-platform .checkbox-icon:after, .checkbox-square input:after, .checkbox-square .checkbox-icon:after{
+  left: 40%;
+}
+
+.has-header{
+  bottom: 40px;
+}
+
+.rtl{
+  direction: rtl;
+}

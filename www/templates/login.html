@@ -1,0 +1,15 @@
+<ion-view view-title="Login" name="login-view" ng-controller="LoginCtrl">
+  <ion-content class="padding">
+    <img src="img/ttb_logo.png" class="img_full_width" />
+
+    <div class="list list-inset">
+      <label class="item item-input">
+        <input type="text" placeholder="מספר טלפון ללא רווחים ומקפים" ng-model="data.phone_number">
+      </label>
+      <label class="item item-input">
+        <input type="password" placeholder="סיסמה" ng-model="data.password">
+      </label>
+    </div>
+    <button class="button button-block button-balanced" ng-click="login()">Login</button>
+  </ion-content>
+</ion-view>

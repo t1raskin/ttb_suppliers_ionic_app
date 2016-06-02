@@ -1,0 +1,71 @@
+<ion-view ng-controller="ProjectFormCtrl" view-title="הוספת פרוייקט לזמן לבנות">
+  <ion-content>
+    <form name="newProjectForm">
+      <div class="list list-inset">
+        <label class="item item-input">
+          <input type="text" ng-model="project.business_name" placeholder="שם המעצב/העסק">
+        </label>
+        <label class="item item-input">
+          <input type="text" ng-model="project.business_field" placeholder="תחום העיסוק">
+        </label>
+        <label class="item item-input">
+          <input type="text" ng-model="project.name" placeholder="שם הפרוייקט">
+        </label>
+        <label class="item item-input">
+          <input type="text" ng-model="project.area" placeholder="אזור הפרוייקט">
+        </label>
+        <label class="item item-input">
+          <input type="text" ng-model="project.size" placeholder="שטח הפרוייקט">
+        </label>
+        <label class="item item-input">
+          <div class="input-label">סוג הפרוייקט</div>
+          <select ng-model="project.type" ng-options="option.name for option in projectTypes track by option.id">
+          </select>
+        </label>
+        <label class="item item-input">
+          <input type="text" ng-model="project.comments" placeholder="הערות">
+        </label>
+        <label class="item item-input">
+          <textarea ng-model="project.rooms_details" placeholder="תיאור החללים השונים בבית"></textarea>
+        </label>
+        <label class="item item-input">
+          <textarea ng-model="project.problems" placeholder="האתגר הגדול עימו התמודדת בפרוייקט (בעיה שהייתה לדיירים/ שטח מדרוני/עץ במרכז השטח שלא רצינו להרוס וכו)"></textarea>
+        </label>
+        <label class="item item-input">
+          <textarea ng-model="project.problem_solving" placeholder="כיצד התמודדת עם האתגר/בעיה"></textarea>
+        </label>
+        <label class="item item-input">
+          <textarea ng-model="project.tenants_needs" placeholder="צרכים של הדיירים"></textarea>
+        </label>
+        <label class="item item-input">
+          <textarea ng-model="project.special_features" placeholder="ייחודיות של הפרוייקט"></textarea>
+        </label>
+        <label class="item item-input">
+          <textarea ng-model="project.tenants_feedback" placeholder="תגובות הדיירים"></textarea>
+        </label>
+        <label class="item item-input">
+          <textarea ng-model="project.more_comments" placeholder="דברים נוספים שהיית רוצה לספר על הפרויקט"></textarea>
+        </label>
+
+
+
+        <label class="item item-input">
+          <div class="input-label">תמונה ממצלמה</div>
+          <button ng-click="getPhotoFromCamera();">From Camera</button>
+        </label>
+        <label class="item item-input">
+          <div class="input-label">תמונה מגלריה</div>
+          <button ng-click="getPhotoFromGallery();">From Photo Library</button>
+        </label>
+        <label class="item item-input">
+          <div ng-repeat="photo in project.photosDisplay" class="photo_container">
+            <img id="myImage" ng-src="{{photo}}" style="height: 100px; width: auto;">
+            <div>
+            </div>
+          </div>
+        </label>
+      </div>
+      <button class="button button-full button-positive" ng-disabled="newProjectForm.$invalid" ng-click="sendProject()" >שליחה</button>
+    </form>
+  </ion-content>
+</ion-view>

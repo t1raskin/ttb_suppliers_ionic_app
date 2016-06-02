@@ -1,0 +1,29 @@
+<ion-view ng-controller="MyPointsCtrl" view-title="הנקודות שלי">
+	<ion-content class="rtl">
+		סך כל הנקודות שצברתי:
+    {{pointsSum}}
+    <br>
+    <br>
+    טבלת הנקודות שצברתי
+    <div class="row" ng-repeat="item in pointsDetails">
+      <div class="col">
+        <label>תאריך: </label>
+        {{item.dateTime}}
+      </div>
+      <div class="col">
+        <label>מספר ליד: </label>
+        {{item.ttb_lead_id}}
+      </div>
+      <div class="col">
+        <label>נקודות: </label>
+        {{item.points_action_points}}
+      </div>
+    </div>
+    <br>
+    <br>
+    <button class="padding button button-balanced" ng-click="toggle(rewardsVisible)">לבחירת מתנה או הטבה לחץ כאן</button>
+    <div ng-show="isShown(rewardsVisible)">
+      <button class="padding button button-dark" ng-repeat="reward in rewards">{{reward.name}} - {{reward.points}} נקודות</button><br>
+    </div>
+	</ion-content>
+</ion-view>

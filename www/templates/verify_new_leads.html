@@ -1,0 +1,20 @@
+<ion-view ng-controller="LeadVerificationCtrl" view-title="אישור לידים חדשים במערכת">
+  <ion-content>
+    <div class="row" ng-repeat="item in newLeads">
+      <div class="col">
+        <label>תאריך: </label>
+        {{item.timestamp}}
+      </div>
+      <div class="col">
+        <label>שולח הליד: </label>
+        {{item.lead_source.name}}
+      </div>
+      <div class="col">
+        <button class="button button-full button-positive" ng-click="updateVerificationStatus(item.id)">אישור/דחיית הליד</button>
+      </div>
+    </div>
+    <div ng-show="noNewLeads" class="padding">
+      <h2>אין לידים חדשים שצריך לאשר כרגע</h2>
+    </div>
+  </ion-content>
+</ion-view>

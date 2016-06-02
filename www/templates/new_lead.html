@@ -1,0 +1,65 @@
+<ion-view view-title="ליד חדש">
+	<ion-content>
+		<div ng-controller="NewLeadCtrl">
+      <form name="leadForm" novalidate ng-show="formView">
+        <ion-list>
+          <label class="item item-input">
+            <input type="text" name="username" ng-model="leadFormData.lead_details.username" required placeholder="שם">
+          </label>
+          <p ng-show="leadForm.username.$error.required && showErrors">שדה חובה</p>
+          <label class="item item-input">
+            <input type="text" name="phone" ng-model="leadFormData.lead_details.phone" required placeholder="טלפון">
+          </label>
+          <p ng-show="leadForm.phone.$error.required && showErrors">שדה חובה</p>
+          <label class="item item-input">
+            <input type="email" name="email" ng-model="leadFormData.lead_details.email" required placeholder="כתובת אימייל">
+          </label>
+          <p ng-show="leadForm.email.$error.required && showErrors">שדה חובה</p>
+          <p ng-show="leadForm.email.$error.email && showErrors">אנא הזן כתובת אימייל תקינה</p>
+          <label class="item item-input">
+            <input type="text" name="budget" ng-model="leadFormData.lead_details.budget" placeholder="תקציב">
+          </label>
+          <label class="item item-input">
+            <input type="text" name="comments" ng-model="leadFormData.lead_details.comments" placeholder="הערות">
+          </label>
+          <label class="item item-input">
+            <input type="text" name="address" ng-model="leadFormData.lead_details.address" required placeholder="כתובת">
+          </label>
+          <p ng-show="leadForm.address.$error.required && showErrors">שדה חובה</p>
+
+          <label class="item item-input item-select">
+            <div class="input-label">
+              שלב בבנייה
+            </div>
+            <select ng-model="buildingStage" ng-options="option.name for option in buildingStages">
+            </select>
+          </label>
+          <label class="item item-input item-select">
+            <div class="input-label">
+              צורך
+            </div>
+            <select ng-model="need" ng-options="option.name for option in needs track by option.id" ng-change="getNeedCategories()">
+            </select>
+          </label>
+          <ion-list>
+            <div ng-repeat="category in needCategories">
+              <ion-checkbox ng-change="sync(bool, category)" ng-model="bool" ng-checked="isChecked(category.id)">
+                {{category.name}}
+              </ion-checkbox>
+
+              <label class="item item-input item-select" ng-show="bool">
+                <div class="input-label">
+                בחירת ספק ספציפי
+                </div>
+                <select ng-model="selectedCatBusiness[$index]" ng-change="updateSelectedBusiness(category, $index)" ng-options="x.name for x in category.businesses">
+                </select>
+              </label>
+            </div>
+          </ion-list>
+          <button type="button" class="button button-block button-balanced" ng-click="formSend()">שליחה</button>
+        </ion-list>
+      </form>
+      <div class="padding">{{thxMessage}}</div>
+    </div>
+	</ion-content>
+</ion-view>

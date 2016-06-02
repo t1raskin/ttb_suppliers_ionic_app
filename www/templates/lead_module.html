@@ -1,0 +1,19 @@
+<ion-view ng-controller="NavigationCtrl" view-title="מערכת הלידים" >
+	<ion-content>
+		<div ng-show="isAdmin()">
+      <button class="button button-full button-positive" ng-click="go('app.verify_new_leads')">
+אישור לידים חדשים שהתקבלו למערכת
+      </button>
+      <br>
+    </div>
+    <button class="button button-full button-balanced" ng-click="go('app.new_lead')">
+			יש לי ליד - הזנת לידים
+		</button>
+		<button class="button button-full button-balanced" ng-click="go('app.my_points')">
+			הנקודות שלי
+		</button>
+		<button class="button button-full button-balanced" ng-click="go('app.my_leads')">
+			לידים שקיבלתי ועדכון סטטוס
+		</button>
+	</ion-content>
+</ion-view>

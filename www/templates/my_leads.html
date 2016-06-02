@@ -1,0 +1,32 @@
+<ion-view ng-controller="MyLeadsCtrl" view-title="הלידים שלי">
+  <ion-content class="rtl">
+    <h2 class="text-center">טבלת הלידים שלי:</h2>
+    <div class="row header">
+      <div class="col">תאריך</div>
+      <div class="col">סוג ליד</div>
+      <div class="col">מקור ליד</div>
+      <div class="col">הערות</div>
+      <div class="col">סטטוס</div>
+    </div>
+    <div class="lead_block" ng-class="{lead_block_active: isShown(item.id)}" ng-repeat="item in myLeads">
+      <div class="row" ng-click="toggle(item.id)">
+        <div class="col">{{item.timestamp}}</div>
+        <div class="col">{{item.lead_source.type}}</div>
+        <div class="col">{{item.lead_source.name}}</div>
+        <div class="col">{{item.lead_details.comments}}</div>
+        <div class="col">{{item.lead_log[0].lead_status}}</div>
+      </div>
+      <div class="lead_details_block" ng-show="isShown(item.id)">
+        <h4>פירוט היסטוריית הליד:</h4>
+        <div class="lead_block" ng-repeat="logEntry in item.lead_log">
+          <div class="row">
+            <div class="col">{{logEntry.timestamp}}</div>
+            <div class="col">{{logEntry.lead_status}}</div>
+            <div class="col">{{logEntry.comments}}</div>
+          </div>
+        </div>
+        <button class="padding button button-balanced" ng-click="statusUpdatePopup(item)">עדכון סטטוס</button>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
