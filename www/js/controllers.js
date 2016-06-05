@@ -30,7 +30,7 @@ angular.module('ttb_suppliers.controllers', [])
 
   $scope.login = function(data) {
     $ionicLoading.show({template: '<ion-spinner></ion-spinner>'});
-    console.log('login button pressed');
+    console.log('login button pressed v1.0.2');
     AuthService.login($scope.data.phone_number, $scope.data.password).then(function(authenticated) {
       $ionicLoading.hide();
       $state.go('app.lead_module', {}, {reload: true});
