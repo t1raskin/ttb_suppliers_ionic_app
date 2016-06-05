@@ -3,7 +3,7 @@ angular.module('ttb_suppliers.controllers', [])
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, AuthService) {
 })
 
-.controller('LoginCtrl', function($scope, $ionicPopup, $state, DataServiceHTTP, AuthService) {
+.controller('LoginCtrl', function($scope, $ionicPopup, $state, DataServiceHTTP, AuthService, $ionicLoading) {
   //$scope.data = {};
 
   //$scope.login = function() {
@@ -29,10 +29,13 @@ angular.module('ttb_suppliers.controllers', [])
   $scope.data = {};
 
   $scope.login = function(data) {
+    $ionicLoading.show({template: '<ion-spinner></ion-spinner>'});
     AuthService.login($scope.data.phone_number, $scope.data.password).then(function(authenticated) {
+      $ionicLoading.hide();
       $state.go('app.lead_module', {}, {reload: true});
       //$scope.setCurrentUsername($scope.data.phone_number);
     }, function(err) {
+      $ionicLoading.hide();
       var alertPopup = $ionicPopup.alert({
         title: 'אימות נכשל!',
         template: 'אנא בדוק את הפרטים ונסה שנית!'
@@ -57,42 +60,42 @@ angular.module('ttb_suppliers.controllers', [])
     return false;
   }
 
-    $scope.isLeadsModule = function(){
-      if($state.current.name == "app.my_leads" || $state.current.name == "app.my_points" || $state.current.name == "app.new_lead"){
-        return true;
-      }
-      return false;
+  $scope.isLeadsModule = function(){
+    if($state.current.name == "app.my_leads" || $state.current.name == "app.my_points" || $state.current.name == "app.new_lead"){
+      return true;
     }
+    return false;
+  }
 
-    $scope.logout = function() {
-      AuthService.logout();
-      $state.go('login');
-    };
+  $scope.logout = function() {
+    AuthService.logout();
+    $state.go('login');
+  };
 
-    $scope.performValidRequest = function() {
-      $http.get('http://localhost:8100/valid').then(
-        function(result) {
-          $scope.response = result;
-        });
-    };
+  $scope.performValidRequest = function() {
+    $http.get('http://localhost:8100/valid').then(
+      function(result) {
+        $scope.response = result;
+      });
+  };
 
-    $scope.performUnauthorizedRequest = function() {
-      $http.get('http://localhost:8100/notauthorized').then(
-        function(result) {
-          // No result here..
-        }, function(err) {
-          $scope.response = err;
-        });
-    };
+  $scope.performUnauthorizedRequest = function() {
+    $http.get('http://localhost:8100/notauthorized').then(
+      function(result) {
+        // No result here..
+      }, function(err) {
+        $scope.response = err;
+      });
+  };
 
-    $scope.performInvalidRequest = function() {
-      $http.get('http://localhost:8100/notauthenticated').then(
-        function(result) {
-          // No result here..
-        }, function(err) {
-          $scope.response = err;
-        });
-    };
+  $scope.performInvalidRequest = function() {
+    $http.get('http://localhost:8100/notauthenticated').then(
+      function(result) {
+        // No result here..
+      }, function(err) {
+        $scope.response = err;
+      });
+  };
 })
 
 .controller('NewLeadCtrl', function($scope, DataServiceHTTP, $filter) {
