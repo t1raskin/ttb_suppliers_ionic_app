@@ -6,16 +6,16 @@
           <label class="item item-input">
             <input type="text" name="username" ng-model="leadFormData.lead_details.username" required placeholder="שם">
           </label>
-          <p ng-show="leadForm.username.$error.required && showErrors">שדה חובה</p>
+          <p ng-show="leadForm.username.$error.required && showErrors" class="error-message">*שדה חובה</p>
           <label class="item item-input">
             <input type="text" name="phone" ng-model="leadFormData.lead_details.phone" required placeholder="טלפון">
           </label>
-          <p ng-show="leadForm.phone.$error.required && showErrors">שדה חובה</p>
+          <p ng-show="leadForm.phone.$error.required && showErrors" class="error-message">*שדה חובה</p>
           <label class="item item-input">
             <input type="email" name="email" ng-model="leadFormData.lead_details.email" required placeholder="כתובת אימייל">
           </label>
-          <p ng-show="leadForm.email.$error.required && showErrors">שדה חובה</p>
-          <p ng-show="leadForm.email.$error.email && showErrors">אנא הזן כתובת אימייל תקינה</p>
+          <p ng-show="leadForm.email.$error.required && showErrors" class="error-message">*שדה חובה</p>
+          <p ng-show="leadForm.email.$error.email && showErrors" class="error-message">*אנא הזן כתובת אימייל תקינה</p>
           <label class="item item-input">
             <input type="text" name="budget" ng-model="leadFormData.lead_details.budget" placeholder="תקציב">
           </label>
@@ -25,7 +25,7 @@
           <label class="item item-input">
             <input type="text" name="address" ng-model="leadFormData.lead_details.address" required placeholder="כתובת">
           </label>
-          <p ng-show="leadForm.address.$error.required && showErrors">שדה חובה</p>
+          <p ng-show="leadForm.address.$error.required && showErrors" class="error-message">*שדה חובה</p>
 
           <label class="item item-input item-select">
             <div class="input-label">

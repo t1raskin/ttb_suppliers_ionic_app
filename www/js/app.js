@@ -224,7 +224,6 @@ angular.module('ttb_suppliers', ['ionic', 'ttb_suppliers.controllers', 'ngCordov
 })
 
 .factory('Camera', ['$q', function($q) {
-
   return {
     getPicture: function(options) {
       var q = $q.defer();
@@ -258,53 +257,51 @@ angular.module('ttb_suppliers', ['ionic', 'ttb_suppliers.controllers', 'ngCordov
   }
 }])
 
-.run(function($location, $state, $rootScope, AuthService) {
+.run(function($location, $state, $rootScope, AuthService, $window) {
   $rootScope.$on( "$stateChangeStart", function(event, toState, toParams, fromState, fromParams) {
-    if(toState.name !== 'login' && !AuthService.isAuthenticated()) {
-      event.preventDefault();
-      $state.go('login');
+    if($window.localStorage.getItem('ttb_supplier_auth_token') !== undefined){
+      //
     }
+    else{
+      if(toState.name !== 'login') {
+        event.preventDefault();
+        $state.go('login');
+      }
+    }
+
+
   });
 })
 
-.service('AuthService', function($q, $http, DataServiceHTTP) {
+.service('AuthService', function($q, $http, DataServiceHTTP, $window) {
   var LOCAL_TOKEN_KEY = 'ttb_supplier_auth_token';
   var username = ''; // phone number
   var supplierName = ''; // name
   var userType = ''; // type
   var business_id = ''; // business_id
   var role = ''; // admin or user
-  //var userRole = '';
-  // var isAuthenticated = false;
   var authToken;
 
   function loadUserCredentials() {
-    var token = window.localStorage.getItem(LOCAL_TOKEN_KEY);
+    var token = $window.localStorage.getItem(LOCAL_TOKEN_KEY);
     if (token) {
       useCredentials(token);
     }
   }
 
   function storeUserCredentials(token) {
-    window.localStorage.setItem(LOCAL_TOKEN_KEY, token);
+    $window.localStorage.setItem(LOCAL_TOKEN_KEY, token);
     useCredentials(token);
   }
 
   function useCredentials(token) {
     username = token.split('.')[0];
-    role = token.split('.')[1];
+    supplierName = token.split('.')[1];
+    userType = token.split('.')[2];
+    business_id = token.split('.')[3];
+    role = token.split('.')[4];
+    authToken = token.split('.')[5];
     isAuthenticated = true;
-    authToken = token;
-
-    //if (userRole == '250') {
-    //  role = USER_ROLES.admin
-    //}
-    //if (userRole == '100') {
-    //  role = USER_ROLES.public
-    //}
-
-    // Set the token as header for your requests!
-    //$http.defaults.headers.common['X-Auth-Token'] = token;
   }
 
   function destroyUserCredentials() {
@@ -314,9 +311,7 @@ angular.module('ttb_suppliers', ['ionic', 'ttb_suppliers.controllers', 'ngCordov
     userType = '';
     business_id = '';
     role = '';
-    //userRole = '';
     isAuthenticated = false;
-    //$http.defaults.headers.common['X-Auth-Token'] = undefined;
     window.localStorage.removeItem(LOCAL_TOKEN_KEY);
   }
 
@@ -325,26 +320,14 @@ angular.module('ttb_suppliers', ['ionic', 'ttb_suppliers.controllers', 'ngCordov
       var loginApplicationUserPromise = DataServiceHTTP.loginApplicationUser(name, pw);
       loginApplicationUserPromise.then(function(response) {
         if(response.data.status == 'true'){
-          //$rootScope.phone_number = response.data.phone_number;
-          //$rootScope.business_id = response.data.business_id;
-          //$rootScope.type = response.data.type;
-          //$rootScope.name = response.data.name;
-          //$rootScope.role = response.data.role;
-          storeUserCredentials(response.data.phone_number + '.' + response.data.role + '.yourServerToken');
+          storeUserCredentials(response.data.phone_number + '.' + response.data.name + '.' + response.data.type + '.' + response.data.business_id + '.' + response.data.role + '.yourServerToken');
+
           resolve('Login success.');
         }
         else{
           reject('Login Failed.');
         }
       });
-
-      //if ((name == 'admin' && pw == '1') || (name == 'user' && pw == '1')) {
-      //  // Make a request and receive your auth token from your server
-      //  storeUserCredentials(name + '.yourServerToken');
-      //  resolve('Login success.');
-      //} else {
-      //  reject('Login Failed.');
-      //}
     });
   };
 
@@ -352,12 +335,16 @@ angular.module('ttb_suppliers', ['ionic', 'ttb_suppliers.controllers', 'ngCordov
     destroyUserCredentials();
   };
 
+  var checkCredentials = function() {
+    loadUserCredentials();
+    console.log('checkCredentials '+ isAuthenticated);
+  };
+
   loadUserCredentials();
 
   return {
     login: login,
     logout: logout,
-    //isAuthorized: isAuthorized,
     isAuthenticated: function() {return isAuthenticated;},
     username: function() {return username;}, // phone number
     role: function() {return role;},

@@ -1,7 +1,9 @@
 <ion-view ng-controller="MyLeadsCtrl" view-title="הלידים שלי">
   <ion-content class="rtl">
     <h2 class="text-center">טבלת הלידים שלי:</h2>
-    <div class="row header">
+
+
+    <!--<div class="row header">
       <div class="col">תאריך</div>
       <div class="col">סוג ליד</div>
       <div class="col">מקור ליד</div>
@@ -25,6 +27,56 @@
             <div class="col">{{logEntry.comments}}</div>
           </div>
         </div>
+        <button class="padding button button-balanced" ng-click="statusUpdatePopup(item)">עדכון סטטוס</button>
+      </div>
+    </div>-->
+
+
+    <div class="card" ng-repeat="item in myLeads">
+      <div class="item item-divider" ng-click="toggle(item.id)">
+        <div style="float: right;">
+          <span>תאריך: </span><span>{{item.timestamp | date:'dd/MM/yyyy'}}</span>
+        </div>
+        <div style="float: left;">
+          <span>סטטוס: </span><span>{{item.lead_log[0].lead_status}}</span>
+        </div>
+      </div>
+      <div class="item item-text-wrap" ng-show="isShown(item.id)">
+        <h2 class="text-center text-bold">פרטי הליד</h2>
+        <span>ליד מאומת: </span><span class="text-bold">{{parseInt(item.lead_verified)? 'כן': 'לא'}}</span>
+        <br>
+        <span>שם: </span><span>{{item.lead_details.username}}</span>
+        <br>
+        <span>טלפון: </span><span>{{item.lead_details.phone}}</span>
+        <br>
+        <span>אימייל: </span><span>{{item.lead_details.email}}</span>
+        <br>
+        <span>כתובת: </span><span>{{item.lead_details.address}}</span>
+        <br>
+        <span>תקציב: </span><span>{{item.lead_details.budget}}</span>
+        <br>
+        <span>הערות: </span><span>{{item.lead_details.comments}}</span>
+        <br>
+        <span>צורך: </span><span>{{item.lead_details.need}}</span>
+        <br>
+        <span>שלב בנייה: </span><span>{{item.lead_details.buildingStage}}</span>
+        <br>
+        <br>
+
+        <h2 class="text-center text-bold">פרטי שולח הליד</h2>
+        <span>שם: </span><span>{{item.lead_source.name}}</span>
+        <br>
+        <br>
+
+        <h2 class="text-center text-bold">היסטוריית הליד</h2>
+        <div ng-repeat="ll in item.lead_log">
+        <span>תאריך עדכון: </span><span>{{correctDate(ll.timestamp) | date:'dd/MM/yyyy'}} | </span>
+        <span>סטטוס: </span><span>{{ll.lead_status}}</span>
+        <br>
+        <span>הערות: </span><span>{{ll.comments}}</span>
+        <br><br>
+        </div>
+
         <button class="padding button button-balanced" ng-click="statusUpdatePopup(item)">עדכון סטטוס</button>
       </div>
     </div>

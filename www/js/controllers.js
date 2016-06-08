@@ -4,33 +4,10 @@ angular.module('ttb_suppliers.controllers', [])
 })
 
 .controller('LoginCtrl', function($scope, $ionicPopup, $state, DataServiceHTTP, AuthService, $ionicLoading) {
-  //$scope.data = {};
-
-  //$scope.login = function() {
-  //  var loginApplicationUserPromise = DataServiceHTTP.loginApplicationUser($scope.data.phone_number, $scope.data.password);
-  //  loginApplicationUserPromise.then(function(response) {
-  //    if(response.data.status == 'true'){
-  //      $rootScope.phone_number = response.data.phone_number;
-  //      $rootScope.business_id = response.data.business_id;
-  //      $rootScope.type = response.data.type;
-  //      $rootScope.name = response.data.name;
-  //      $rootScope.role = response.data.role;
-  //      $state.go('app.lead_module');
-  //    }
-  //    else{
-  //      var alertPopup = $ionicPopup.alert({
-  //        title: 'הזדהות נכשלה!',
-  //        template: 'בדוק את פרטי הכניסה ונסה שוב'
-  //      });
-  //    }
-  //  });
-  //}
-
   $scope.data = {};
 
   $scope.login = function(data) {
     $ionicLoading.show({template: '<ion-spinner></ion-spinner>'});
-    console.log('login button pressed v1.0.2');
     AuthService.login($scope.data.phone_number, $scope.data.password).then(function(authenticated) {
       $ionicLoading.hide();
       $state.go('app.lead_module', {}, {reload: true});
@@ -99,7 +76,7 @@ angular.module('ttb_suppliers.controllers', [])
   };
 })
 
-.controller('NewLeadCtrl', function($scope, DataServiceHTTP, $filter) {
+.controller('NewLeadCtrl', function($scope, DataServiceHTTP, $filter, AuthService) {
   $scope.supplierCategories = [];
   $scope.formView = true;
 
@@ -161,17 +138,17 @@ angular.module('ttb_suppliers.controllers', [])
     }
   };
 
-  $scope.leadFormData = {};
+  $scope.leadFormData = $scope.leadForm;
 	$scope.showErrors = false;
-	$scope.formSend = function(leadData){
-		$scope.showErrors = true;
+	$scope.formSend = function(){
+    $scope.showErrors = true;
 		if($scope.leadForm.$invalid){
-			console.log('form has errors ');
+			//console.log('form has errors ');
 			//console.log('$scope.leadFormData.lead_details.username.$error.required '+$scope.leadFormData.lead_details.username.$error.required);
-			console.log('$scope.showErrors '+$scope.showErrors);
+			//console.log('$scope.showErrors '+$scope.showErrors);
 		}
 		else{
-			$scope.leadFormData.lead_details.buildingStage = $scope.buildingStage.name;
+      $scope.leadFormData.lead_details.buildingStage = $scope.buildingStage.name;
 			$scope.leadFormData.lead_details.need = $scope.need.name;
 			$scope.leadFormData.categories = $scope.currentCategories;
       $scope.leadFormData.lead_recipients = [];
@@ -180,8 +157,9 @@ angular.module('ttb_suppliers.controllers', [])
       for (var i=0; i<$scope.leadFormData.categories.length; i++){
         // in case all businesses in category
         if($scope.leadFormData.categories[i].selectedBusiness.business_id == 1){
+
           for (var j=0; j<$scope.leadFormData.categories[i].businesses.length; j++){
-            if($scope.leadFormData.categories[j].selectedBusiness.business_id != 1){
+            if($scope.leadFormData.categories[i].businesses[j].business_id != 1){
               var tmpVar = {};
               tmpVar.business_id = $scope.leadFormData.categories[i].businesses[j].business_id;
               tmpVar.name = $scope.leadFormData.categories[i].businesses[j].name;
@@ -224,11 +202,11 @@ angular.module('ttb_suppliers.controllers', [])
         }
         // from who the lead came from
         $scope.leadFormData.lead_source.phone_number = AuthService.username();
-        $scope.leadFormData.lead_source.name = AuthService.role();
+        $scope.leadFormData.lead_source.name = AuthService.supplierName();
         $scope.leadFormData.lead_source.business_id = AuthService.business_id();
       }
 
-			console.log($scope.leadFormData);
+			//console.log($scope.leadFormData);
 			var formSendPromise = DataServiceHTTP.sendLeadData($scope.leadFormData);
 			formSendPromise.then(function(response) {
 				//console.log('sent the form data ' + response.data);
@@ -245,7 +223,7 @@ angular.module('ttb_suppliers.controllers', [])
 	};
 })
 
-.controller('MyPointsCtrl', function($scope, $state, DataServiceHTTP) {
+.controller('MyPointsCtrl', function($scope, $state, DataServiceHTTP, AuthService) {
   $scope.isShown = function(group) {
     return $scope.shownGroup === group;
   };
@@ -267,7 +245,7 @@ angular.module('ttb_suppliers.controllers', [])
       //console.log($scope.pointsSum);
     }
     $scope.pointsDetails = response.data;
-    console.log(response.data);
+    //console.log(response.data);
   });
 
   $scope.rewardsVisible = false;
@@ -277,7 +255,7 @@ angular.module('ttb_suppliers.controllers', [])
   });
 })
 
-.controller('MyLeadsCtrl', function($scope, $state, DataServiceHTTP, $ionicPopup, $filter) {
+.controller('MyLeadsCtrl', function($scope, $state, DataServiceHTTP, $ionicPopup, $filter, AuthService) {
   $scope.isShown = function(group) {
     return $scope.shownGroup === group;
   };
@@ -289,29 +267,35 @@ angular.module('ttb_suppliers.controllers', [])
     }
   };
 
+  $scope.correctDate = function(date){
+    return date.split(' ')[0];
+  }
+
   var getUserLeadsPromise = DataServiceHTTP.getUserLeads(AuthService.business_id());
   getUserLeadsPromise.then(function(response) {
     $scope.myLeads = response.data;
+
     for(var i=0; i<$scope.myLeads.length; i++){
       $scope.myLeads[i].lead_details = JSON.parse($scope.myLeads[i].lead_details);
-      //console.log(response.data[i].lead_details);
       $scope.myLeads[i].lead_recipients = JSON.parse($scope.myLeads[i].lead_recipients);
       $scope.myLeads[i].lead_source = JSON.parse($scope.myLeads[i].lead_source);
       $scope.myLeads[i].lead_type = JSON.parse($scope.myLeads[i].lead_type);
+      $scope.myLeads[i].timestamp = $scope.myLeads[i].timestamp.split(' ')[0];
 
       // special formatting of data for display in view
       if($scope.myLeads[i].lead_type.name == 'ttb_supplier_application'){
-        $scope.myLeads[i].lead_source.name = AuthService.supplierName();
-        $scope.myLeads[i].lead_source.type = AuthService.userType();
+        //$scope.myLeads[i].lead_source.name = AuthService.supplierName();
+        //$scope.myLeads[i].lead_source.type = AuthService.userType();
         for(var j=0; j<$scope.myLeads[i].lead_recipients.length; j++){
           if($scope.myLeads[i].lead_recipients[j].business_id == AuthService.business_id()){
             // the details of the lead for the current business only, first row is the latest status
             $scope.myLeads[i].lead_log = $scope.myLeads[i].lead_recipients[j].lead_log;
+            console.log($scope.myLeads[i]);
           }
         }
       }
     }
-    console.log($scope.myLeads);
+    //console.log($scope.myLeads);
   });
 
   $scope.statusUpdatePopup = function(lead) {
@@ -326,7 +310,7 @@ angular.module('ttb_suppliers.controllers', [])
           $scope.data.status = res.data[i];
         }
       }
-      console.log($scope.data.status);
+      //console.log($scope.data.status);
       $scope.leadStatuses = res.data;
       // lead status update popup
       var myPopup = $ionicPopup.show({
@@ -381,7 +365,7 @@ angular.module('ttb_suppliers.controllers', [])
         //console.log('Tapped!', lead);
         var updateLeadRecipientsDataPromise = DataServiceHTTP.updateLeadRecipientsData(lead);
         updateLeadRecipientsDataPromise.then(function(res){
-          console.log(res);
+          //console.log(res);
         });
       });
     });
@@ -417,7 +401,7 @@ angular.module('ttb_suppliers.controllers', [])
         $ionicLoading.show({template: 'מעבד נתונים', duration:500});
       },
       function(err) {
-        console.err(err);
+        //console.err(err);
         $ionicLoading.show({template: 'שגיאה', duration:500});
       }
     );
@@ -430,7 +414,7 @@ angular.module('ttb_suppliers.controllers', [])
     };
     try{
       Camera.getPicture(picOptions).then(function(imageURI) {
-          console.log(imageURI);
+          //console.log(imageURI);
           $scope.lastPhoto = "data:image/jpeg;base64,"+imageURI;
           $scope.lastPhotoOriginal = imageURI;
           $scope.project.photos.push($scope.lastPhotoOriginal);
@@ -539,12 +523,12 @@ angular.module('ttb_suppliers.controllers', [])
             if ($scope.data.verificationStatus == $scope.verificationStatuses[0]) {
               //e.preventDefault();
               // do nothing
-              console.log($scope.data.verificationStatus);
+              //console.log($scope.data.verificationStatus);
               return $scope.data.verificationStatus.value;
             }
             else {
               // save new record in lead log of the current supplier
-              console.log($scope.data.verificationStatus);
+              //console.log($scope.data.verificationStatus);
               return $scope.data.verificationStatus.value;
             }
           }
@@ -555,7 +539,7 @@ angular.module('ttb_suppliers.controllers', [])
     verificationPopup.then(function(verificationStatus) {
       var updateLeadVerificationStatusPromise = DataServiceHTTP.updateLeadVerificationStatus(lead_id, verificationStatus);
       updateLeadVerificationStatusPromise.then(function(res){
-        console.log(res);
+        //console.log(res);
         $scope.updateLeadList(lead_id);
       });
     });
